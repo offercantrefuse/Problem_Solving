@@ -1,0 +1,122 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+int N;
+int map[10][10];
+
+vector<pair<int, int>> person;
+vector<pair<int, int>> stair;
+
+int dist(pair<int, int> p1, pair<int, int> p2) {
+	int temp;
+	temp = abs(p1.first - p2.first) + abs(p1.second - p2.second);
+	return temp;
+}
+
+int simul(vector<pair<int, int>> &st_zero, vector<pair<int, int>> &st_one, vector<pair<int, int>> &stair) {
+	vector<int> move_zero;
+	vector<int> move_one;
+	for (int i = 0; i < st_zero.size(); i++) {
+		move_zero.push_back(dist(st_zero[i], stair[0]));
+	}
+	for (int i = 0; i < st_one.size(); i++) {
+		move_one.push_back(dist(st_one[i], stair[0]));
+	}
+	int q[10];
+	for (int i = 0; i < 10; i++) {
+		q[i] = -1;
+	}
+	int front = 0;
+	int end = 0;
+	int time_zero = 0;
+	while (!(front == end && end == move_zero.size())) {
+		time_zero++;
+		for (int i = 0; i < move_zero.size(); i++) {
+			if (move_zero[i] == 0)
+				q[end++] = (map[stair[0].first][stair[0].second]);
+			move_zero[i]--;
+		}
+		while (q[front] == 0) {
+			front++;
+		}
+		for (int i = front; i < front + 3; i++) {
+			if (i >= end)
+				break;
+			q[i]--;
+		}
+	}
+
+	int time_one = 0;
+	for (int i = 0; i < 10; i++) {
+		q[i] = -1;
+	}
+	front = 0;
+	end = 0;
+	while (!(front == end && end == move_one.size())) {
+		time_one++;
+		for (int i = 0; i < move_one.size(); i++) {
+			if (move_one[i] == 0)
+				q[end++] = (map[stair[1].first][stair[1].second]);
+			move_one[i]--;
+		}
+		while (q[front] == 0) {
+			front++;
+		}
+		for (int i = front; i < front + 3; i++) {
+			if (i >= end)
+				break;
+			q[i]--;
+		}
+	}
+	return max(time_zero, time_one);
+}
+
+int part() {
+	int ans = 1000000000;
+	for (int i = 0; i < (1 << person.size()); i++) {
+		vector<pair<int, int>> st_zero;
+		vector<pair<int, int>> st_one;
+		for (int j = 0; j < person.size(); j++) {
+			if (i&(1 << j))
+				st_one.push_back(person[j]);
+			else
+				st_zero.push_back(person[j]);
+		}
+		ans = (ans > simul(st_zero, st_one, stair)) ? simul(st_zero, st_one, stair) : ans;
+	}
+	return ans;
+}
+
+
+
+int main() {
+	int T;
+	cin >> T;
+	for (int tc = 1; tc <= T; tc++) {
+		cin >> N;
+		for (int i = 0; i < N; i++) {
+			for (int j = 0; j < N; j++) {
+				cin >> map[i][j];
+			}
+		}
+		for (int i = 0; i < N; i++) {
+			for (int j = 0; j < N; j++) {
+				if (map[i][j] == 1)
+					person.push_back(make_pair(i, j));
+				if (map[i][j] > 1)
+					stair.push_back(make_pair(i, j));
+			}
+		}
+		cout << "#" << tc << ' ' << part() << endl;
+
+		for (int i = 0; i < N; i++) {
+			for (int j = 0; j < N; j++) {
+				map[i][j] = 0;
+			}
+		}
+		person.clear();
+		stair.clear();
+	}
+	return 0;
+}

@@ -1,0 +1,74 @@
+#include <iostream>
+#define diff(a,b) ((a>b)? a-b:b-a)
+using namespace std;
+int N;
+int a[17] = { 0, };
+int b[17] = { 0, };
+int s[17][17] = { 0, };
+int mini;
+int t_a, t_b;
+
+int taste(int arr[17]) {
+	int sum = 0;
+	for (int i = 1; i <= N; i++) {
+		if (arr[i] == 1) {
+			for (int j = 1; j <= N; j++) {
+				if (arr[j] == 1) {
+					sum += s[i][j];
+				}
+			}
+		}
+	}
+	return sum;
+}
+
+void dfs(int cnt) {
+	if (cnt == 0) {
+		for (int i = 1; i <= N; i++)  b[i] = 0;
+		for (int i = 1; i <= N; i++) {
+			if (a[i] == 0)  b[i] = 1;
+		}
+		t_a = taste(a);
+		t_b = taste(b);
+		mini = (mini > diff(t_a, t_b)) ? diff(t_a, t_b) : mini;
+	}
+	else {
+		for (int i = 1; i <= N; i++) {
+			if (a[i] == 0) {
+				a[i] = 1;
+				dfs(--cnt);
+				a[i] = 0;
+				++cnt;
+			}			
+		}
+	}
+}
+
+int main() {
+	int T;
+	cin >> T;
+	for (int tc = 1; tc <= T; tc++) {
+		cin >> N;
+
+		for (int i = 0; i < 17; i++) {
+			for (int j = 0; j < 17; j++) {
+				s[i][j] = 0;
+			}
+		}
+
+		for (int i = 1; i <= N; i++) {
+			for (int j = 1; j <= N; j++) {
+				cin >> s[i][j];
+			}
+		}
+		mini = 9999999;
+		dfs(N / 2);
+		cout << "#" << tc << ' ' << mini << endl;
+
+		for (int i = 1; i < N; i++) {
+			a[i] = 0;
+			b[i] = 0;
+		}
+	}
+	return 0;
+}
