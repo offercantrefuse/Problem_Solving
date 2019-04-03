@@ -35,7 +35,7 @@ public class Solution5656 {
 		return ct;
 	}
 
-	static void down() {
+	static void down() { // 0이 아닌 것들을 arraylist에 저장했다가 다시 밑에부터 push 해준다.
 		for (int j = 0; j < W; j++) {
 			ArrayList<Integer> arr = new ArrayList<Integer>();
 			for (int i = H - 1; i >= 0; i--) {
@@ -48,13 +48,10 @@ public class Solution5656 {
 			for (int i = 0; i < aSize; i++) {
 				tmp[cnt--][j] = arr.get(i);
 			}
-			while (cnt >= 0) {
-				tmp[cnt--][j] = 0;
-			}
 		}
 	}
 
-	static void bomb(int r, int c) {
+	static void bomb(int r, int c) { // 4방을 보면서 1 넘는 것들 queue에 넣어줌
 		Queue<Pos> q = new LinkedList<Pos>();
 		q.offer(new Pos(r, c, tmp[r][c]));
 		while (!q.isEmpty()) {
@@ -114,8 +111,8 @@ public class Solution5656 {
 		for (int k = 0; k < N; k++) {
 			int col = order[k];
 			for (int i = 0; i < H; i++) {
-				if (tmp[i][col] != 0) {
-					bomb(i, col);
+				if (tmp[i][col] != 0) { // 그 순서의 col에서 벽돌의 맨 위 row 찾기
+					bomb(i, col); // 그 row와 col에 폭파 시뮬
 					break;
 				}
 			}
@@ -134,9 +131,9 @@ public class Solution5656 {
 	}
 
 	static void dfs(int idx) {
-		if (idx == N) {
-			mapCopy();
-			simul();
+		if (idx == N) { // 순서 정해졌을때
+			mapCopy(); // 맵 복사
+			simul(); // 시뮬
 			return;
 		}
 		for (int i = 0; i < W; i++) {
