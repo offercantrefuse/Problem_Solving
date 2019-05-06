@@ -8,7 +8,6 @@ int N, M;
 set<vector<int>> ss;
 vector<int> arr;
 int ans[8];
-bool visit[8];
 
 void dfs(int idx, int cnt) {
 	if (cnt == M) {
@@ -19,12 +18,8 @@ void dfs(int idx, int cnt) {
 		return;
 	}
 	for (int i = idx; i < arr.size(); i++) {
-		if (!visit[i]) {
-			visit[i] = true;
-			ans[cnt] = arr[i];
-			dfs(i + 1, cnt + 1);
-			visit[i] = false;
-		}
+		ans[cnt] = arr[i];
+		dfs(i + 1, cnt + 1);
 	}
 }
 
